@@ -19,6 +19,7 @@ $app = new \Slim\App([
 //GST Mantra
 require_once '../api/gst_mantra/get_chapters.php';
 require_once '../api/gst_mantra/get_chapter_details.php';
+require_once '../api/gst_mantra/get_service_details.php';
 
 $app->get('/hello/{name}', function (Request $request, Response $response) {
     $name = $request->getAttribute('name');
