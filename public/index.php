@@ -21,9 +21,14 @@ require_once '../api/gst_mantra/get_chapters.php';
 require_once '../api/gst_mantra/get_chapter_details.php';
 require_once '../api/gst_mantra/get_service_details.php';
 
-$app->get('/hello/{name}', function (Request $request, Response $response) {
+//Wallpapers
+require_once '../api/wallpapers/get_category.php';
+require_once '../api/wallpapers/get_images_by_category.php';
+
+$app->get('/hello/{name}/{startAt}', function (Request $request, Response $response) {
     $name = $request->getAttribute('name');
-    $response->getBody()->write("Hello, $name");
+    $startAt = $request->getAttribute('startAt');
+    $response->getBody()->write("Hello, $name  Hi $startAt");
 
     return $response;
 });
