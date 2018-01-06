@@ -42,7 +42,7 @@ $app->get('/wallpapers/category/{app_id}/{startAt}', function ($request, $respon
                 //Get 3 Images
                 $sql_image = "SELECT `image_name` FROM `image_gallery` WHERE `category_id` = :category_id
                               ORDER BY `votes` DESC
-                              LIMIT 3";
+                              LIMIT 4";
                 $stmt_image = $con->prepare($sql_image);
                 $stmt_image->bindParam(':category_id', $data['id']);
 
@@ -124,7 +124,7 @@ $app->get('/wallpapers/category/{app_id}', function ($request, $response)
                 //Get 3 Images
                 $sql_image = "SELECT `image_name` FROM `image_gallery` WHERE `category_id` = :category_id
                               ORDER BY `votes` DESC
-                              LIMIT 3";
+                              LIMIT 4";
                 $stmt_image = $con->prepare($sql_image);
                 $stmt_image->bindParam(':category_id', $data['id']);
 
