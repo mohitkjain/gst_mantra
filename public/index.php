@@ -24,6 +24,8 @@ require_once '../api/gst_mantra/get_service_details.php';
 //Wallpapers
 require_once '../api/wallpapers/get_category.php';
 require_once '../api/wallpapers/get_images_by_category.php';
+require_once '../api/wallpapers/increase_decrease_vote.php';
+require_once '../api/wallpapers/get_featured_images.php';
 
 $app->get('/hello/{name}/{startAt}', function (Request $request, Response $response) {
     $name = $request->getAttribute('name');

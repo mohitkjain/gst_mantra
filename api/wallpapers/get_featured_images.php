@@ -1,6 +1,6 @@
 <?php
 
-class Images
+class Featured_Images
 {
     public $image_id;
     public $image_name;
@@ -8,13 +8,13 @@ class Images
     public $thumb_image;
     public $votes;
 }
-$app->get('/wallpapers/category/{category_id:\d+}[/{startAt:\d+}]', function ($request, $response) 
+$app->get('/wallpapers/featured/{app_id:\d+}[/{startAt:\d+}]', function ($request, $response) 
 {
     require_once '../api/wallpapers/settings/dbconnect.php';
     require_once '../api/wallpapers/settings/config.php';
 
+    $app_id = $request->getAttribute('app_id');
     $startAt = $request->getAttribute('startAt');
-    $category_id = $request->getAttribute('category_id');
     if(!empty($startAt))
         $startAt = intval($startAt);
     else
@@ -26,23 +26,22 @@ $app->get('/wallpapers/category/{category_id:\d+}[/{startAt:\d+}]', function ($r
         $pagination = new Data_Details();
         $maxResult = 10;
         //Prepare a Query Statement
-        $sql = "SELECT `id`, `image_title`, `image_name`, `votes`, (SELECT COUNT(*) FROM `image_gallery` WHERE `category_id` = :category_id) AS 'total'
+        $sql = "SELECT `id`, `image_title`, `image_name`, `votes`, (SELECT COUNT(*) FROM `image_gallery` WHERE `category_id` IN (SELECT `id` FROM `category` WHERE `app_id` = :app_id)) AS 'total'
                 FROM `image_gallery` 
-                WHERE `category_id` = :category_id
-                ORDER BY `date_updated` DESC, `votes` DESC
+                WHERE `category_id` IN (SELECT `id` FROM `category` WHERE `app_id` = :app_id)
+                ORDER BY `votes` DESC, `date_updated` DESC
                 LIMIT :startAt, :maxResult";
         $stmt = $con->prepare($sql);
         $stmt->bindParam(':app_id', $app_id, PDO::PARAM_INT);
         $stmt->bindParam(':startAt', $startAt, PDO::PARAM_INT);
         $stmt->bindParam(':maxResult', $maxResult, PDO::PARAM_INT);
-        $stmt->bindParam(':category_id', $category_id, PDO::PARAM_INT);
         if ($stmt->execute()) 
         {
             $images_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $myArray = array();
             foreach($images_data as $data)
             {
-                $obj = new Images();
+                $obj = new Featured_Images();
                 $obj->image_id = $data['id'];
                 $obj->image_name = $data['image_title'];
                 $obj->large_image = $config->large_address.'/'.$data['image_name']; 
