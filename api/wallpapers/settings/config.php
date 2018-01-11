@@ -4,6 +4,7 @@ class Config
 {
     public $thumb_address = 'http://www.techradius.net/wpapp_admin/uploads/thumb';
     public $large_address = 'http://www.techradius.net/wpapp_admin/uploads/large';
+    public $mid_address = 'http://www.techradius.net/wpapp_admin/uploads/mid';
 }
 
 

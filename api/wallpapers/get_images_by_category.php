@@ -4,7 +4,9 @@ class Images
 {
     public $image_id;
     public $image_name;
+    public $category_name;
     public $large_image;
+    public $mid_image;
     public $thumb_image;
     public $votes;
 }
@@ -26,8 +28,9 @@ $app->get('/wallpapers/category/{category_id:\d+}[/{startAt:\d+}]', function ($r
         $pagination = new Data_Details();
         $maxResult = 10;
         //Prepare a Query Statement
-        $sql = "SELECT `id`, `image_title`, `image_name`, `votes`, (SELECT COUNT(*) FROM `image_gallery` WHERE `category_id` = :category_id) AS 'total'
-                FROM `image_gallery` 
+        $sql = "SELECT img.`id`, `image_title`, `image_name`, `votes`, cat.`category`, (SELECT COUNT(*) FROM `image_gallery` WHERE `category_id` = :category_id) AS 'total'
+                FROM `image_gallery` img
+                INNER JOIN `category` cat ON img.`category_id` = cat.`id`
                 WHERE `category_id` = :category_id
                 ORDER BY `date_updated` DESC, `votes` DESC
                 LIMIT :startAt, :maxResult";
@@ -45,7 +48,9 @@ $app->get('/wallpapers/category/{category_id:\d+}[/{startAt:\d+}]', function ($r
                 $obj = new Images();
                 $obj->image_id = $data['id'];
                 $obj->image_name = $data['image_title'];
-                $obj->large_image = $config->large_address.'/'.$data['image_name']; 
+                $obj->category_name = $data['category'];
+                $obj->large_image = $config->large_address.'/'.$data['image_name'];
+                $obj->mid_image =  $config->mid_address.'/'.$data['image_name'];
                 $obj->thumb_image = $config->thumb_address.'/'.$data['image_name'];             
                 $obj->votes = $data['votes'];
 
